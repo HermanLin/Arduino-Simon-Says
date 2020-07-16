@@ -1,5 +1,18 @@
 # Arduino-Simon-Says
 
+---
+### Equipment
+- 5 Pushbuttons
+- 4 LEDs (preferably in different colors)
+- 1 Piezo
+- 5 220 Ohm resistors
+- 2 1k Ohm resistors
+- 2 10k Ohm resistors
+- 1 1M Ohm resistor
+- 12 Wires
+
+---
+
 ### Wiring for Simon Says game
 ![](simon_says.png?raw=true)
 
