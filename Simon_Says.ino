@@ -4,6 +4,10 @@
  * 7-16-2020
  */
 
+
+const int difficulty 300 // the lower, the more difficult
+
+
 // LEDs
 const int RED = 2;
 const int BLU = 3;
@@ -26,7 +30,6 @@ int START_TONE_SIZE = sizeof(start_tones_order) / sizeof(start_tones_order[0]);
 const int lose_tones[] = {440, 415, 392, 370};
 
 // variables for game operation
-const int difficulty = 300; // the lower, the more difficult
 bool lost = false;
 int seq_count = 0;
 int sequence[256]; // maximum sequence length of 256
@@ -69,9 +72,15 @@ void sequencer() {
     delay(difficulty);
   }
 
-  turnChange();
+  changeTurn();
 }
 
+/**************************************************
+ * bool checker()
+ * - checks the player's input against the sequence
+ * - returns true if a wrong input is recorded
+ * - otherwise, false
+ **************************************************/
 bool checker() {
   for (size_t i = 0; i < seq_count; i++) {
     reply = ledSelect();
@@ -86,10 +95,20 @@ bool checker() {
     if (reply != sequence[i]) {
       return true;
     }
+    // this delay can be altered to account for reaction timings
+    // when pressing down the pushbutton. a longer delay will allow
+    // for longer presses to be counted as one input
     delay(150);
   }
   return false;
 }
+
+/*********************************************
+ * void soundPlayer(int type)
+ * - plays notes depending on type
+ * - 0, plays the start sounds when game loads
+ * - 1, plays losing sound when player loses
+ *********************************************/
 void soundPlayer(int type) {
   if (type == 0) { // start sounds
     for (size_t i = 0; i < START_TONE_SIZE; i++) {
@@ -108,6 +127,11 @@ void soundPlayer(int type) {
   }
 }
 
+/**************************************************
+ * int ledSelect()
+ * - returns the respective led pin for each button
+ * - waits until input is received
+ **************************************************/
 int ledSelect() {
   while (true) { 
     if (note = analogRead(A1)) {
@@ -120,13 +144,22 @@ int ledSelect() {
   }
 }
 
-void turnChange() {
+/***********************************************
+ * void changeTurn()
+ * - blinks all the LEDs to signal a turn change
+ * - happens between Simon's and player's turns
+ ***********************************************/
+void changeTurn() {
   for (size_t i = 2; i < 6; i++) digitalWrite(i, HIGH);
   delay(650);
   for (size_t i = 2; i < 6; i++) digitalWrite(i, LOW);
   delay(200);
 }
 
+/********************************************
+ * void blinkScore()
+ * - blinks the final score on the yellow LED
+ ********************************************/
 void blinkScore() {
   for (size_t i = 0; i < seq_count - 1; i++) {
     digitalWrite(YLW, HIGH);
@@ -136,6 +169,9 @@ void blinkScore() {
   }
 }
 
+/*************
+ * void loop()
+ *************/
 void loop() {
   if (digitalRead(startPin) == HIGH) {
     delay(50);
@@ -143,13 +179,13 @@ void loop() {
       soundPlayer(0);
       // reset variables
       randomSeed(random(analogRead(0))); // generate random new sequence
-      seq_count = 0;
-      lost = false;
+      seq_count = 0; 
+      lost = false;  
       delay(1500);
 
       while (true) {
-        sequencer();
-        lost = checker();
+        sequencer(); // run sequence
+        lost = checker(); // run player check
         if (lost) {
           delay(100);
           soundPlayer(1); // play losing tones
@@ -158,7 +194,7 @@ void loop() {
           break;
         }
         delay(500);
-        turnChange();
+        changeTurn();
       }
     }
   }
