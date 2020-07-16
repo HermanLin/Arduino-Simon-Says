@@ -9,19 +9,19 @@ const int difficulty = 300; // the lower, the more difficult
 
 
 // LEDs
-const int RED = 2;
-const int BLU = 3;
-const int GRN = 4;
-const int YLW = 5;
+#define RED 2
+#define BLU 3
+#define GRN 4
+#define YLW 5
 
 // Pushbuttons and buzzer
-const int redPin = 6;
-const int bluPin = 7;
-const int grnPin = 8;
-const int ylwPin = 9;
-const int simonPin = A1;
-const int startPin = 10;
-const int buzPin = 11;
+#define redPin 6
+#define bluPin 7
+#define grnPin 8
+#define ylwPin 9
+#define simonPin A1
+#define startPin 10
+#define buzPin 11
 
 // frequencies for the buzzer
 const int light_tones[] = {329, 195, 392, 261};
