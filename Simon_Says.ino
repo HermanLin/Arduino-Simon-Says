@@ -5,7 +5,7 @@
  */
 
 
-const int difficulty 300 // the lower, the more difficult
+const int difficulty 300; // the lower, the more difficult
 
 
 // LEDs
