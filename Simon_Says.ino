@@ -25,15 +25,16 @@ const int difficulty = 300; // the lower, the more difficult
 
 // frequencies for the buzzer
 const int light_tones[] = {329, 195, 392, 261};
-const int start_tones_order[] = {3,3,3,3,0,0,0,0,1,1,1,1,2,2,2,2,3,3,0,1,2};
+const uint8_t start_tones_order[] = {3,3,3,3,0,0,0,0,1,1,1,1,2,2,2,2,3,3,0,1,2};
 int START_TONE_SIZE = sizeof(start_tones_order) / sizeof(start_tones_order[0]);
 const int lose_tones[] = {440, 415, 392, 370};
 
 // variables for game operation
 bool lost = false;
 int seq_count = 0;
-int sequence[256]; // maximum sequence length of 256
-int new_led, note, reply;
+uint8_t sequence[256]; // maximum sequence length of 256
+uint8_t new_led, reply;
+size_t note, i;
 
 /**************
  * void setup()
@@ -63,7 +64,7 @@ void sequencer() {
   sequence[seq_count++] = new_led;
   
   // play entire sequence
-  for (size_t i = 0; i < seq_count; i++) {
+  for (i = 0; i < seq_count; i++) {
     tone(buzPin, light_tones[sequence[i] - 2]);
     digitalWrite(sequence[i], HIGH);
     delay(difficulty);
@@ -82,7 +83,7 @@ void sequencer() {
  * - otherwise, false
  **************************************************/
 bool checker() {
-  for (size_t i = 0; i < seq_count; i++) {
+  for (i = 0; i < seq_count; i++) {
     reply = ledSelect();
 
     // blink corresponding LED
@@ -111,7 +112,7 @@ bool checker() {
  *********************************************/
 void soundPlayer(int type) {
   if (type == 0) { // start sounds
-    for (size_t i = 0; i < START_TONE_SIZE; i++) {
+    for (i = 0; i < START_TONE_SIZE; i++) {
       tone(buzPin, light_tones[start_tones_order[i]]);
       delay(150);
       noTone(buzPin);
@@ -150,9 +151,9 @@ int ledSelect() {
  * - happens between Simon's and player's turns
  ***********************************************/
 void changeTurn() {
-  for (size_t i = 2; i < 6; i++) digitalWrite(i, HIGH);
+  for (i = 2; i < 6; i++) digitalWrite(i, HIGH);
   delay(650);
-  for (size_t i = 2; i < 6; i++) digitalWrite(i, LOW);
+  for (i = 2; i < 6; i++) digitalWrite(i, LOW);
   delay(200);
 }
 
